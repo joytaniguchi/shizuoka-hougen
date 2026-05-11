@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>静岡型方言語彙一覧</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Shippori+Mincho:wght@400;600&display=swap');
+
+  :root {
+    --ink: #1a1208;
+    --paper: #f5f0e8;
+    --accent: #8b3a1a;
+    --accent-light: #c06030;
+    --rule: #c8b89a;
+    --tag-izu: #5a7a5a;
+    --tag-chu: #4a6a8a;
+    --tag-west: #7a5a3a;
+    --tag-east: #6a4a7a;
+    --tag-all: #8b3a1a;
+    --tag-bg: rgba(0,0,0,0.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Serif JP', serif;
+    min-height: 100vh;
+    padding: 40px 24px;
+  }
+
+  .wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--rule);
+    position: relative;
+  }
+
+  header::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    background: var(--accent);
+    margin: 10px auto 0;
+  }
+
+  .title-jp {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    line-height: 1.3;
+  }
+
+  .subtitle {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #7a6a5a;
+    letter-spacing: 0.12em;
+  }
+
+  .source {
+    margin-top: 6px;
+    font-size: 0.75rem;
+    color: #9a8a78;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 28px;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  .legend-title {
+    font-size: 0.78rem;
+    color: #7a6a5a;
+    margin-right: 4px;
+    align-self: center;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .tag-all  { background: #fce8de; color: var(--tag-all); border: 1px solid #e8c0a8; }
+  .tag-chu  { background: #deeaf5; color: var(--tag-chu); border: 1px solid #aac4de; }
+  .tag-west { background: #f0e8dc; color: var(--tag-west); border: 1px solid #d4bca0; }
+  .tag-east { background: #ecdcf4; color: var(--tag-east); border: 1px solid #c8a8d8; }
+  .tag-izu  { background: #dcf0e0; color: var(--tag-izu); border: 1px solid #a8cca8; }
+  .tag-mix  { background: #f0f0dc; color: #5a5a2a; border: 1px solid #c8c8a0; }
+
+  .search-wrap {
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    padding: 10px 16px 10px 40px;
+    border: 1.5px solid var(--rule);
+    background: white;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    border-radius: 2px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-wrap input:focus { border-color: var(--accent-light); }
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9a8a78;
+    font-size: 1rem;
+  }
+
+  .count { 
+    font-size: 0.78rem; 
+    color: #9a8a78; 
+    margin-bottom: 12px; 
+    letter-spacing: 0.05em;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  thead tr {
+    background: var(--accent);
+    color: white;
+  }
+
+  thead th {
+    padding: 12px 14px;
+    text-align: left;
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    font-size: 0.82rem;
+    border-right: 1px solid rgba(255,255,255,0.15);
+    white-space: nowrap;
+  }
+  thead th:last-child { border-right: none; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--rule);
+    transition: background 0.15s;
+  }
+
+  tbody tr:nth-child(even) { background: rgba(200,184,154,0.1); }
+  tbody tr:hover { background: rgba(200,184,154,0.22); }
+  tbody tr.hidden { display: none; }
+
+  td {
+    padding: 11px 14px;
+    vertical-align: top;
+    line-height: 1.65;
+  }
+
+  .word {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .meaning {
+    color: #2a2018;
+    font-weight: 400;
+  }
+
+  .example {
+    color: #4a3a2a;
+    font-style: normal;
+    font-size: 0.84rem;
+  }
+
+  .region { }
+
+  .note {
+    font-size: 0.8rem;
+    color: #7a6a5a;
+    margin-top: 3px;
+  }
+
+  footer {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #9a8a78;
+    border-top: 1px solid var(--rule);
+    padding-top: 20px;
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 700px) {
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tbody tr {
+      margin-bottom: 16px;
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      padding: 10px;
+      background: white !important;
+    }
+    td { padding: 5px 8px; border-bottom: none; }
+    td::before {
+      content: attr(data-label) '  ';
+      font-weight: 600;
+      color: #9a8a78;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 2px;
+    }
+    td.word::before { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="title-jp">静岡型方言　語彙一覧</div>
+    <div class="subtitle">静岡県内でのみ使用が確認される「静岡型方言」を中心に収録</div>
+    <div class="source">出典：富山昭『えーらしぞーか　静岡県方言誌』（静岡新聞社、2007年）</div>
+  </header>
+
+  <div class="legend">
+    <span class="legend-title">地域凡例：</span>
+    <span class="tag tag-all">県（全域）</span>
+    <span class="tag tag-chu">中部</span>
+    <span class="tag tag-west">西部</span>
+    <span class="tag tag-east">東部</span>
+    <span class="tag tag-izu">伊豆</span>
+    <span class="tag tag-mix">複数地域</span>
+  </div>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" placeholder="語彙・意味・例文で検索…">
+  </div>
+
+  <div class="count" id="count"></div>
+
+  <table id="main-table">
+    <thead>
+      <tr>
+        <th style="width:13%">語彙</th>
+        <th style="width:18%">意味</th>
+        <th style="width:33%">例文</th>
+        <th style="width:10%">使用地域</th>
+        <th style="width:26%">備考</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+
+    <!-- 以下、静岡型方言（第一章）の全語彙 -->
+
+    <tr>
+      <td data-label="語彙" class="word">アッラサル</td>
+      <td data-label="意味" class="meaning">頼まれる・言い付かる</td>
+      <td data-label="例文" class="example">きんの おやく（親戚）からこりょーあつらさってきた</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-all">県</span></td>
+      <td data-label="備考" class="note">アツラエル（託す・預ける）に受け身の助動詞「サル」が付いた語。県全域方言の代表的な語。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">アンマシナイ</td>
+      <td data-label="意味" class="meaning">あまりのことだ・薄情だ・心憎い</td>
+      <td data-label="例文" class="example">約束を破るなんてあんましない人だ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-chu">中部</span></td>
+      <td data-label="備考" class="note">アンマシモナイとも言う。「アンマシ（あんまり）」に強調の接尾語「ナイ」を付けた表現。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">イキズマシー</td>
+      <td data-label="意味" class="meaning">息苦しい・仕事が苦しい</td>
+      <td data-label="例文" class="example">この部屋は狭いんていきずましら</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">伊豆・東部・中部</span></td>
+      <td data-label="備考" class="note">「いきづまる（息詰まる）」の形容詞化か。北陸にイキズクナイがある。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ウザマシー</td>
+      <td data-label="意味" class="meaning">甚だしく多い・大きい</td>
+      <td data-label="例文" class="example">まんだ引っ越しの片付けがうざましくある</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-chu">中部</span></td>
+      <td data-label="備考" class="note">「すばらしい」（焼津）の意もあるのが特徴的。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ウッショー</td>
+      <td data-label="意味" class="meaning">熱中する・夢中になる</td>
+      <td data-label="例文" class="example">彼は釣りにうっしょーでまだ戻って来ん</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-west">西部</span></td>
+      <td data-label="備考" class="note">「うつ（空）」に「しょー（正気・意識）」で、「うつつを抜かす」状態のことか。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">オーボッタイ</td>
+      <td data-label="意味" class="meaning">うっとうしい・はれぼったい</td>
+      <td data-label="例文" class="example">ゆんべの寝不足で顔んおーほったいよー</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-all">県</span></td>
+      <td data-label="備考" class="note">静岡の「タイ・ボイ方言」の代表格。他県ではオーボリタイ（千葉）があるのみ。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">オシワル</td>
+      <td data-label="意味" class="meaning">教わる</td>
+      <td data-label="例文" class="example">私もあの先生におしわったことがある</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-west">西部</span></td>
+      <td data-label="備考" class="note">共通語「おそわる」の転語形（音変化）だが全国的に珍しい語形。遠州の特徴的な言い方。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">オスンバー</td>
+      <td data-label="意味" class="meaning">はにかみ屋</td>
+      <td data-label="例文" class="example">この子はおすんばーで人前が苦手だ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">語源は「小さくなる・すぼまる」の古語「すばる」で、恥ずかしがって身体をすぼめるところから。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">オダッタイ</td>
+      <td data-label="意味" class="meaning">お調子者・おだてに乗る者</td>
+      <td data-label="例文" class="example">あの人はおだっくいでどこにでも顔を出す</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-chu">中部</span></td>
+      <td data-label="備考" class="note">オダッキーとも言い、「おだを食う（おだてに乗る）」の名詞化。静清地域での独特の言い方。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">オヒンブル</td>
+      <td data-label="意味" class="meaning">お上品ぶる・気取る</td>
+      <td data-label="例文" class="example">妙におひんぶった言い方は嫌われるよ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-all">県</span></td>
+      <td data-label="備考" class="note">ほぼ全域に分布。「お上品ぶる」の簡略形で、現在のところ『日本方言大辞典』でも静岡のみ。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">オベッタイ</td>
+      <td data-label="意味" class="meaning">煩わしい・気乗りがしない</td>
+      <td data-label="例文" class="example">わざわざ来るじゃーおべったいでやめたずら</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-chu">中部</span></td>
+      <td data-label="備考" class="note">岡部では「煩わしい」、井川では「不潔だ・いやらしい」の意。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ガータレル</td>
+      <td data-label="意味" class="meaning">壊れる・破損する</td>
+      <td data-label="例文" class="example">神社がガータれちゃったでみんなで修理せまいか</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-west">西部</span></td>
+      <td data-label="備考" class="note">語源は不詳。「ガタ（音を立てて揺れ動く）」を含む動詞「がたれる」あたりか。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">カギナル</td>
+      <td data-label="意味" class="meaning">手足が寒さでかじかむ</td>
+      <td data-label="例文" class="example">めた寒くって手がかぎなるぜん</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-west">西部</span></td>
+      <td data-label="備考" class="note">「かじかむ」の方言はカジケルが全国的。カギナルはこの地域独特。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">カサッパチマイマイ</td>
+      <td data-label="意味" class="meaning">かたつむり</td>
+      <td data-label="例文" class="example">ここいらにかさっぱちまいまいが這ってるら</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-chu">中部</span></td>
+      <td data-label="備考" class="note">西部でマイマイ、中部でカサッパチ・カサンドー、東部でカサンマイが主。近世期の全国方言辞典にも「駿河沼津辺にて」と記録。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">キッサイ</td>
+      <td data-label="意味" class="meaning">面倒・気味が悪い</td>
+      <td data-label="例文" class="example">そんなきっさいな事を言うなよ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部（中遠）</span></td>
+      <td data-label="備考" class="note">大東町ではキッサイモナイとも言う。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">キッチャカ</td>
+      <td data-label="意味" class="meaning">早く・さっさと・てきぱき</td>
+      <td data-label="例文" class="example">仕事もまっときっちゃかにやってくりょー</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">菊川の春の茶祭り「菊茶花祭り」の当て字に感心。チャカは東北や北陸でのチャカチャカ（手早いさま）とも関連か。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">グジュグル</td>
+      <td data-label="意味" class="meaning">くすぐる</td>
+      <td data-label="例文" class="example">おらがの背中をぐじゅぐるのはよせ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">伊豆・東部</span></td>
+      <td data-label="備考" class="note">「くすぐる」の転語形だが他県になく、その油音化がくすぐったさにつながる感がある。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ゴータレル</td>
+      <td data-label="意味" class="meaning">けなす・ねだる</td>
+      <td data-label="例文" class="example">あんましごーたれるとあとでえらい目に遭うぞ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-east">東部</span></td>
+      <td data-label="備考" class="note">近世書に「ごた」が駿河で怒って悪口を言う意とある。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ゴセッポイ</td>
+      <td data-label="意味" class="meaning">せいせいした気分だ・安楽だ</td>
+      <td data-label="例文" class="example">子供らんいなくて今日はごせっぽーわ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">東部・中部・西部（中遠）</span></td>
+      <td data-label="備考" class="note">駿河の代表的な方言として知られる。富士方面の一部では反対の意（せいせいしない）で伝わる。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">コツイ</td>
+      <td data-label="意味" class="meaning">小さい</td>
+      <td data-label="例文" class="example">あの人は身体はこついけが力はめっぽう強いよ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">県内東半分でコスイ、西半分でコツイの言い方が目立つ。井川はコツナイ、本川根でコッツケナイとも。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">コブショッタイ</td>
+      <td data-label="意味" class="meaning">だらしない・不潔だ</td>
+      <td data-label="例文" class="example">こぶしょったいなりして出かけるのはよせ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">ブショッタイに接頭語「コ」を付けた言い方。コブショッタイは静岡県のみ。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ゴランマク</td>
+      <td data-label="意味" class="meaning">言いたい放題・勝手気まま</td>
+      <td data-label="例文" class="example">さんざん御旗並べてごらんまくな人だ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">伊豆・東部</span></td>
+      <td data-label="備考" class="note">語源不詳だが「ご乱脈」のことか。他県に類似の言い方もない。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">サータレル</td>
+      <td data-label="意味" class="meaning">騒ぐ・うろつく</td>
+      <td data-label="例文" class="example">そんなにさーたれると追ん出されるぞ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">放浪癖の者をサータレモンとも言う。和歌山でシャータレル・ザータレルと言うのが同類か。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">サーラツク</td>
+      <td data-label="意味" class="meaning">前へのめる・つんのめる</td>
+      <td data-label="例文" class="example">坂道でさーらついてあぶんないとこだっけ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">サラツクとも言うから、前のめりで「皿（ひざ頭）を突く」こと。伊豆の一部でも言う。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">サッチラサッポー</td>
+      <td data-label="意味" class="meaning">乱雑・散らかし放題・めちゃくちゃ</td>
+      <td data-label="例文" class="example">部屋ん中がさっちらさっぽーで動かれん</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部（中遠）</span></td>
+      <td data-label="備考" class="note">サッチラカス（散らかす）とサッポール（放り出す）の合成語か。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ザンナラシー</td>
+      <td data-label="意味" class="meaning">ひどい・見苦しい・大きい</td>
+      <td data-label="例文" class="example">夜中にざんならしい音がして目が覚めた</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-west">西部</span></td>
+      <td data-label="備考" class="note">古語の「ざんなし（牧無し）」すなわち「無惨」の逆読みからの語らしい。三重・大阪でザンナイと言う。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">シナベル</td>
+      <td data-label="意味" class="meaning">片付ける・整理する</td>
+      <td data-label="例文" class="example">そけらにある荷物をしなべておきな</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">四国でシノベル、九州でシノブルと言うのが同系語か。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">シミッポイ</td>
+      <td data-label="意味" class="meaning">親しみ深い・馴れ馴れしい</td>
+      <td data-label="例文" class="example">初対面だけん、しみっぽい人だったよ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">東部・中部</span></td>
+      <td data-label="備考" class="note">「身に染む」などの「シム」の形容詞化で人間関係に用いたもの。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ショグナル</td>
+      <td data-label="意味" class="meaning">しゃがむ・うずくまる・かがむ</td>
+      <td data-label="例文" class="example">腹痛でしばらく道端にしょぐなってた</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部（中遠）</span></td>
+      <td data-label="備考" class="note">ションジョクナル・コンジョクナル（富士）・ホンジョクナル（水窪）の言い方も。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ションバイ</td>
+      <td data-label="意味" class="meaning">塩辛い</td>
+      <td data-label="例文" class="example">ちっと醤油を入れすぎたでしょんばいら</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">「塩辛い」ことを東日本でショッパイ、西日本でカライと言う。伊豆・東部ではショッパイ。ションバイは全国でもここだけ。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">シラカー</td>
+      <td data-label="意味" class="meaning">厚かましい・恥知らず</td>
+      <td data-label="例文" class="example">しらかーな人と会うとやっきりする</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-west">西部</span></td>
+      <td data-label="備考" class="note">シラカワとも言い、方言辞典では「白皮」の字を当てる。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">シラックラ</td>
+      <td data-label="意味" class="meaning">態度のはっきりしないさま・ずるくふるまうさま</td>
+      <td data-label="例文" class="example">いつまでもしらっくらしてないではっきりしろ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">伊豆・東部・中部</span></td>
+      <td data-label="備考" class="note">「しら（白）」＋「くら（暗）」に「とぼけていつわる」意。今も使用度は高い。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">スド</td>
+      <td data-label="意味" class="meaning">裸・肌着を着けないでじかに着物を着た身体</td>
+      <td data-label="例文" class="example">寒くてもスドでいるなんておとましいねー</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">富士川以西での広い言い方。「素胴」の意かとある。他県では用例なし。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ズネル</td>
+      <td data-label="意味" class="meaning">猛烈な勢いで走る・突っ走る</td>
+      <td data-label="例文" class="example">どでかい犬に追われてずねくってたよ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部（中遠）</span></td>
+      <td data-label="備考" class="note">ズネクル・ズナルとも言う。井川・本川根ではズナリマール（駆け回る）の言い方も。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">スンミ</td>
+      <td data-label="意味" class="meaning">全然・少しも・少し</td>
+      <td data-label="例文" class="example">そんなこととはすんみ知らないっき</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-chu">中部</span></td>
+      <td data-label="備考" class="note">スンミシとも言う。典型的な県内中部方言。下に打ち消しを伴って「全く…ない」の用法が多い。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">セズヨー</td>
+      <td data-label="意味" class="meaning">手の下しよう・仕方</td>
+      <td data-label="例文" class="example">どう言っても証拠がないんてせずよーがない</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">静岡独特の表現形。セズヨーガナイの句形で用いられるのがほとんど。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">セタコー</td>
+      <td data-label="意味" class="meaning">こせこせ・お節介・狭量</td>
+      <td data-label="例文" class="example">あんましせたこじゃー誰も相手にせんよ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-west">西部</span></td>
+      <td data-label="備考" class="note">遠州の特徴的な表現。愛知のセタコイ（しつこい）・長野のセタッコネーと同類の語か。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">セックリ</td>
+      <td data-label="意味" class="meaning">しゃっくり</td>
+      <td data-label="例文" class="example">せっくりが止まらんでせつないっけ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">「しゃっくり」の転語。『駿国雑志』にも「せくり」とあり、中世文献『明月記』にも「せくり」とある。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ソラッツカイ</td>
+      <td data-label="意味" class="meaning">そらとぼける人・うそつき</td>
+      <td data-label="例文" class="example">どこだってそらっつかいはいるもんずら</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-all">県</span></td>
+      <td data-label="備考" class="note">スラツカイとも言う。庵原郡では意情な者を言う。神奈川ではソラツキと言う。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ゾングリ</td>
+      <td data-label="意味" class="meaning">ぞっとすること</td>
+      <td data-label="例文" class="example">突然人が飛び出て来てぞんぐりしたよ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">ブングラとも。遠州が本場の語。ゾングリスル・ブングラコクという動詞用法での使用が多い。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ターターシイ</td>
+      <td data-label="意味" class="meaning">大層らしい・大仰・大げさだ</td>
+      <td data-label="例文" class="example">そればかの傷で痛いなんてたーたーしいぞ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-izu">伊豆</span></td>
+      <td data-label="備考" class="note">『静岡県方言辞典』『全国方言集』にもあるが、伊豆（田方郡）以外の分布が未確認。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">デコナイ</td>
+      <td data-label="意味" class="meaning">大きい</td>
+      <td data-label="例文" class="example">デコナイ魚が釣れてふんとにうれしっけ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部（中遠）</span></td>
+      <td data-label="備考" class="note">デッコナイとも。「でかい・でっかい」の語幹に接尾語「ナイ」（強調）を付けた言い方。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">テンズラ</td>
+      <td data-label="意味" class="meaning">最初から・はじめから</td>
+      <td data-label="例文" class="example">てんずらそうせずと言ったじゃんか</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-west">西部</span></td>
+      <td data-label="備考" class="note">テン（天）は「はじめ」の意。テンカラやテンガケとも言うが、テンガケは関東でも言う。テンズラは小笠郡・磐田郡で。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">トバム</td>
+      <td data-label="意味" class="meaning">うずくまる・しゃがむ</td>
+      <td data-label="例文" class="example">急にとばんだりして気分でも悪いだか</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-izu">伊豆</span></td>
+      <td data-label="備考" class="note">トバジムとも言う。三島・沼津から伊豆全域に特有の言い方。中・西部でのショグナルと対をなす。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ネグタ</td>
+      <td data-label="意味" class="meaning">よく寝る人・寝坊</td>
+      <td data-label="例文" class="example">うちの子はねぐたで遅刻ばっかだ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">「寝くたばり」のことか。駿東・田方方面ではネブタと言う。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ハグシャレル</td>
+      <td data-label="意味" class="meaning">ふざける・じゃれる</td>
+      <td data-label="例文" class="example">そんなにはぐしゃれとるとあいまち（怪我）せるよ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-chu">中部</span></td>
+      <td data-label="備考" class="note">富士川から大井川までが主な使用地域。小笠郡でハゴジャレル、伊豆でハゴチャレルの言い方も。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ヘラクタ</td>
+      <td data-label="意味" class="meaning">やたらに・むやみに</td>
+      <td data-label="例文" class="example">へらくた人を打ったりしちゃーいけんよ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">ヘラニ・ヘラムショーと言うところもある。榛原郡・磐田郡でヘタクサとも言う。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ホーガシャナイ</td>
+      <td data-label="意味" class="meaning">乱雑だ・手の付けようがない</td>
+      <td data-label="例文" class="example">いつの間にかほーがしゃない事になっちゃった</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-west">西部（中遠）</span></td>
+      <td data-label="備考" class="note">中遠地域の代表的な方言の一つ。他県にも類例がない。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ボッタツ</td>
+      <td data-label="意味" class="meaning">突っ立つ・ぼーっとして立つ</td>
+      <td data-label="例文" class="example">なによーそこにほったってるだ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-all">県</span></td>
+      <td data-label="備考" class="note">共通語「つったつ（突っ立つ）」と同じだが、何もしないで漫然と立っているという意にふさわしい語感。この用法は他県にない。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">マルサラ</td>
+      <td data-label="意味" class="meaning">残らず・そっくりそのまま</td>
+      <td data-label="例文" class="example">大事なものをまるさら持ってかれた</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-all">県</span></td>
+      <td data-label="備考" class="note">サラは静岡・長野・愛知などに特有の接尾語で「…（の）まま、…ごと」の意。代表的な静岡県の表現形。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ミヤバカ</td>
+      <td data-label="意味" class="meaning">わずか・少しばかり</td>
+      <td data-label="例文" class="example">みやばか頑張っても追いつかないら</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">伊豆・東部</span></td>
+      <td data-label="備考" class="note">ミヤバカリとも言うが、ミヤの意味が不明。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ミンジリ</td>
+      <td data-label="意味" class="meaning">よく・十分・しみじみ</td>
+      <td data-label="例文" class="example">学校でみんじり勉強して来い</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">伊豆・東部・中部</span></td>
+      <td data-label="備考" class="note">「みっしり」（一つのことを十分に行うさま）の転語形。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ヤンナリ</td>
+      <td data-label="意味" class="meaning">そのまま・すぐに</td>
+      <td data-label="例文" class="example">叩くとやんなりいかい音がした</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-izu">伊豆</span></td>
+      <td data-label="備考" class="note">接尾語「なり」（まま・ごと・すぐ）の付いた語で「やるなり」の転語。ヤンナリは珍しい。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ユルセー</td>
+      <td data-label="意味" class="meaning">心が伸びやかだ・ゆったりする気分</td>
+      <td data-label="例文" class="example">心配事も片付いて今日はゆるせーわ</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">「気分がゆるやか」の「ゆるい（緩い）」からの語だが、ユルセーの語形は静岡県のみ。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ヨサリカカル</td>
+      <td data-label="意味" class="meaning">寄り掛かる・もたれる</td>
+      <td data-label="例文" class="example">壁によさりかかって一息つく</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">中部・西部</span></td>
+      <td data-label="備考" class="note">ヨサル・ヨリカサルとも言う。「ヨサル（寄さる）」は奈良時代の東国方言とされる古語にもある。</td>
+    </tr>
+
+    <tr>
+      <td data-label="語彙" class="word">ヨル</td>
+      <td data-label="意味" class="meaning">地震が来ること</td>
+      <td data-label="例文" class="example">地震がよるとおっかにゃー</td>
+      <td data-label="使用地域" class="region"><span class="tag tag-mix">伊豆・東部</span></td>
+      <td data-label="備考" class="note">「ゆる（揺る）」と同じで「揺れ動く」こと。奈良時代の歌謡にも用例あり。中部・西部ではイルと言う。</td>
+    </tr>
+
+    </tbody>
+  </table>
+
+  <footer>
+    全 <span id="total"></span> 語（静岡型方言）　／　出典：富山昭『えーらしぞーか』（静岡新聞社、平成19年）
+  </footer>
+
+</div>
+
+<script>
+  const rows = document.querySelectorAll('#tbody tr');
+  const countEl = document.getElementById('count');
+  const totalEl = document.getElementById('total');
+  const searchInput = document.getElementById('search');
+
+  totalEl.textContent = rows.length;
+  updateCount(rows.length);
+
+  function updateCount(n) {
+    countEl.textContent = n + ' 語を表示中';
+  }
+
+  searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    let visible = 0;
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      if (!q || text.includes(q)) {
+        row.classList.remove('hidden');
+        visible++;
+      } else {
+        row.classList.add('hidden');
+      }
+    });
+    updateCount(visible);
+  });
+</script>
+</body>
+</html>
